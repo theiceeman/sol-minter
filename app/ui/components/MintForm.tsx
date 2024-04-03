@@ -36,9 +36,9 @@ const MintForm = () => {
               className="w-full px-[10px] py-[6px] h-[56px] bg-[#1818184D] bg-opacity-30 border-[#2C2C2C] border  text-base text-gray-400 outline-none focus:outline outline-offset-2 outline-1 focus:outline-[#ACACAC] focus:border"
             />
           </div>
-          <button className="border-[#FF4D6A] bottom-1 py-3 bg-[#86303E] mt-5">
+          <button className="border-[#FF4D6A] bottom-1 py-3 bg-[#86303E] mt-5 hover:border-[#ACACAC] hover:border">
             {" "}
-            Begin minting
+            Proceed with Minting...
           </button>
         </div>
         </>

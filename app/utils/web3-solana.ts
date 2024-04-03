@@ -1,6 +1,5 @@
 import { Connection, PublicKey, SystemProgram, Transaction, clusterApiUrl } from "@solana/web3.js";
 import { buildCreateTokenTransaction, generateKeyPair } from "./deploy-token-transaction";
-import { PhantomProvider } from "./types";
 import validateDeployTokenInput from "./validations";
 import { showToast } from "./toaster";
 

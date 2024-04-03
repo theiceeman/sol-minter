@@ -31,8 +31,8 @@ const MintForm = ({
 
   return (
     <>
-      <div className="flex flex-col gap-5 mt-12 border-[#2C2C2C] border w-2/4 h-screen border-b-0 bg-[#100F11] px-10 py-10">
-        <div className="flex gap-5">
+      <div className="flex flex-col gap-5 mt-12 mx-3 border-[#2C2C2C] border lg:w-2/4 h-screen border-b-0 bg-[#100F11] px-10 py-10">
+        <div className="flex gap-5 flex-col md:flex-row">
           <div className="flex w-full flex-col gap-4">
             <label htmlFor="name" className="text-[#ACACAC]">
               Name
@@ -60,7 +60,7 @@ const MintForm = ({
             />
           </div>
         </div>
-        <div className="flex gap-5">
+        <div className="flex gap-5 flex-col md:flex-row">
           <div className="flex w-full flex-col gap-4">
             <label htmlFor="name" className="text-[#ACACAC]">
               Total Supply

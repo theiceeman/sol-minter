@@ -40,8 +40,8 @@ const NavBar = ({
 
   return (
     <>
-      <div className="flex flex-row justify-between px-10 w-full ">
-        <div className="flex flex-row my-auto gap-3">
+      <div className="flex  flex-col-reverse md:flex-row justify-between lg:px-10 w-full gap-5 ">
+        <div className="flex flex-row w-full justify-center my-auto mx-auto md:mx-0 gap-3">
           <div className="flex">
             <Image
               src={SolanaLogo}
@@ -58,14 +58,14 @@ const NavBar = ({
             <span className="text-xs text-[#ACACAC]">Beta</span>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full justify-center md:justify-end">
           <div className="bg-[#FF4D6A1A] px-[10px] py-[10px]">
             <Image
               src={Telegram}
               width={25}
               height={23}
-              className="hidden md:block"
-              alt="Screenshots of the dashboard project showing desktop version"
+              className="block"
+              alt="telegram icon"
             />
           </div>
           <ConnectWalletModal
@@ -76,7 +76,7 @@ const NavBar = ({
           />
 
           {address !== "" && (
-            <div className="relative">
+            <div className="relative hidden md:block">
               <Listbox
                 value={selectedPerson}
                 onChange={(value) => {
@@ -98,7 +98,7 @@ const NavBar = ({
                         width={12}
                         height={8}
                         className="block h-[8px] my-auto"
-                        alt="Screenshots of the dashboard project showing desktop version"
+                        alt="carat icon"
                       />
                     </div>
                   </div>
@@ -134,7 +134,7 @@ const NavBar = ({
                         width={12}
                         height={8}
                         className="block h-[8px] my-auto"
-                        alt="Screenshots of the dashboard project showing desktop version"
+                        alt="carat icon"
                       />
                     </div>
                   </div>
@@ -152,7 +152,7 @@ const NavBar = ({
                           <Image
                             src={DisconnectWallet}
                             className="block w-full my-auto"
-                            alt="Screenshots of the dashboard project showing desktop version"
+                            alt="wallet icon"
                           />
                         </div>
                       </div>

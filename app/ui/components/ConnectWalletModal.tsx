@@ -43,7 +43,7 @@ export default function ConnectWalletModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-1/3 transform overflow-hidden  bg-[#100F11] px-8 py-10 text-left align-middle shadow-xl transition-all border-[#2C2C2C] border">
+              <Dialog.Panel className="w-full md:w-1/3 transform overflow-hidden  bg-[#100F11] px-8 py-10 text-left align-middle shadow-xl transition-all border-[#2C2C2C] border">
                 <Dialog.Title
                   as="h3"
                   className="text-2xl font-medium leading-6 text-white"
@@ -62,7 +62,7 @@ export default function ConnectWalletModal({
                       src={PhantomIcon}
                       width={80}
                       height={80}
-                      className="hidden md:block"
+                      className="block"
                       alt="Screenshots of the dashboard project showing desktop version"
                     />
                     <p className="mt-3">Phantom</p>

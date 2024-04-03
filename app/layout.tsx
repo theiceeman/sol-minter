@@ -17,6 +17,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta
+        name="description"
+        content="Mint spl tokens on solana network."
+      />
+      <meta
+        name="keywords"
+        content="spl tokens, solana, fungible, minting, metadata, sol-minter"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        href="https://solana.com/favicon-32x32.png"
+      />
       <body className={`${space_grotesk.className} bg-black`}>{children}</body>
     </html>
   );

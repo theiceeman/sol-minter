@@ -39,12 +39,13 @@ export default function Home() {
   return (
     <div className="relative z-0">
       <div className="flex relative h-screen flex-col items-center px-24  pt-10 z-[1]">
-        <NavBar setAddress={setAddress} address={address} />
+        <NavBar setAddress={setAddress} address={address} provider={provider} />
 
         <div className="flex flex-col   mt-0 pt-12 text-center ">
           <p className="p-0 m-0 leading-[6rem] tracking-tighter text-[100px] font-bold text-white">
-            Mint Fungible 
-            <br />Tokens on <span className="text-[#7cffa0]">Solana</span>.
+            Mint Fungible
+            <br />
+            Tokens on <span className="text-[#7cffa0]">Solana</span>.
           </p>
           <p className="text-[#ACACAC] pt-5 text-lg font-medium">
             Deploy spl tokens on the solana network, with your metadata stored

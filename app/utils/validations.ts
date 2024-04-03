@@ -17,7 +17,7 @@ export default async function validateDeployTokenInput(
 
     } catch (error: any) {
         // console.log({ error: error.message })
-        showToast(error.message, 'failed')
+        // showToast(error.message, 'failed')
         throw new Error(error)
     }
 

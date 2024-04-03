@@ -53,7 +53,8 @@ export default function ConnectWalletModal({
                 <div className="flex my-10">
                   <div
                     onClick={async () => {
-                      setAddress(await connectToBrowserWalletAfresh());
+                      let result = await connectToBrowserWalletAfresh();
+                      if (result) setAddress(result);
                       closeModal();
                     }}
                     className="bg-[#FF4D6A1A]  px-[40px] py-[34px] cursor-pointer hover:border-[#cf5c5c] hover:border"

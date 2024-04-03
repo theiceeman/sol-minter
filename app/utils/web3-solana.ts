@@ -38,21 +38,26 @@ export function loadConnection(network: iSupportedNetwork) {
 }
 
 export function loadProvider() {
-    const { solana } = window;
-    console.log({ window })
+    try {
+        const { solana } = window;
+        console.log({ window })
 
-    // if (!solana) {
-    //     console.log('Install Solana Phantom wallet.');
-    //     return;
-    // }
-
-    if ('phantom' in window) {
-        const provider = window.phantom?.solana;
-
-        if (provider?.isPhantom) {
-            // console.log({provider})
-            return provider;
+        if (!solana) {
+            throw new Error('Install Solana Phantom wallet.');
+            return;
         }
+
+        if ('phantom' in window) {
+            const provider = window.phantom?.solana;
+
+            if (provider?.isPhantom) {
+                // console.log({provider})
+                return provider;
+            }
+        }
+    } catch (err: any) {
+        showToast(err.message, 'failed')
+        console.log({ err: err.message })
     }
 
     // window.open('https://phantom.app/', '_blank');
@@ -62,13 +67,14 @@ export async function connectToBrowserWalletAfresh() {
     const { solana } = window;
 
     try {
-        if (!solana) throw new Error('Install Solana Phantom wallet.')
+        if (!solana) throw new Error('Please install Phantom browser wallet.')
         // const provider = window.phantom?.solana;
 
         const wallet = await solana.request({ method: "connect", params: {} });
         return wallet.publicKey.toString();
 
     } catch (err: any) {
+        showToast(err.message, 'failed')
         console.log({ err: err.message })
     }
 }
@@ -84,11 +90,7 @@ export async function connectToBrowserWalletAgain() {
         return wallet.publicKey.toString();
 
     } catch (err: any) {
-        // if (err.message === 'User rejected the request.') {
-        //     const wallet = await solana.request({ method: "connect", params: {} });
-        //     return wallet.publicKey.toString();
-        // }
-
+        showToast(err.message, 'failed')
         console.log({ err: err.message })
     }
 }

@@ -3,21 +3,30 @@ import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } fr
 import { TokenMetadata, pack } from "@solana/spl-token-metadata";
 import { PublicKey, Keypair } from "@solana/web3.js";
 import * as web3 from "@solana/web3.js";
+import { iSupportedNetwork, loadConnection } from "./web3-solana";
 
-const CLUSTER_URL = process.env.RPC_URL ?? web3.clusterApiUrl("devnet");
-const connection = new web3.Connection(CLUSTER_URL, { commitment: "finalized" });
+// const CLUSTER_URL = process.env.RPC_URL ?? web3.clusterApiUrl("devnet");
+// const connection = new web3.Connection(CLUSTER_URL, { commitment: "finalized" });
 
 
 export function generateKeyPair() {
     const keypair = web3.Keypair.generate();
     return keypair;
-
-    // console.log('Public key:', keypair.publicKey.toBase58());
-    // console.log('Private key:', keypair.secretKey.toString('hex'));
 }
 
 
-export async function buildCreateTokenTransaction(tokenConfig: TokenMetadata, payerPublicKey: PublicKey, mintKeypair: Keypair, supply: number) {
+export async function buildCreateTokenTransaction(
+    network: iSupportedNetwork,
+    tokenConfig: TokenMetadata,
+    payerPublicKey: PublicKey,
+    mintKeypair: Keypair,
+    supply: number
+) {
+
+    const connection = loadConnection(network);
+    if (!connection)
+        throw new Error('Please connect wallet.')
+
     const EXTENSIONS = [ExtensionType.MetadataPointer];
     const mintSpace = getMintLen(EXTENSIONS);
     const metadataSpace = TYPE_SIZE + LENGTH_SIZE + pack(tokenConfig).length

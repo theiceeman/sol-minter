@@ -7,8 +7,16 @@ import CaratDown from "@/public/carat-down.svg";
 import DisconnectWallet from "@/public/disconnect-wallet.svg";
 import ConnectWalletModal from "./ConnectWalletModal";
 import { useState } from "react";
-import truncateWalletAddress from "@/app/utils/web3-solana";
-import { Menu } from "@headlessui/react";
+import truncateWalletAddress, {
+  iSupportedNetwork,
+} from "@/app/utils/web3-solana";
+import { Listbox, Menu } from "@headlessui/react";
+import { showToast } from "@/app/utils/toaster";
+
+const networks = [
+  { id: 1, name: "Mainnet", value: iSupportedNetwork.mainnetBeta },
+  { id: 2, name: "Devnet", value: iSupportedNetwork.devnet },
+];
 
 const NavBar = ({
   setAddress,
@@ -20,6 +28,8 @@ const NavBar = ({
   provider: any;
 }) => {
   let [isOpen, setIsOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(networks[0]);
+
   function closeModal() {
     setIsOpen(false);
   }
@@ -32,16 +42,21 @@ const NavBar = ({
     <>
       <div className="flex flex-row justify-between px-10 w-full ">
         <div className="flex flex-row my-auto gap-3">
-          <Image
-            src={SolanaLogo}
-            width={25}
-            height={25}
-            className="block"
-            alt="Screenshots of the dashboard project showing desktop version"
-          />
-          <h2 className="text-lg font-normal tracking-wider uppercase">
-            Sol Minter
-          </h2>
+          <div className="flex">
+            <Image
+              src={SolanaLogo}
+              width={35}
+              height={35}
+              className="block my-auto"
+              alt="Screenshots of the dashboard project showing desktop version"
+            />
+          </div>
+          <div className="flex flex-col my-auto">
+            <h2 className="text-lg font-normal tracking-wider uppercase">
+              Sol Minter
+            </h2>
+            <span className="text-xs text-[#ACACAC]">Beta</span>
+          </div>
         </div>
         <div className="flex gap-3">
           <div className="bg-[#FF4D6A1A] px-[10px] py-[10px]">
@@ -53,15 +68,6 @@ const NavBar = ({
               alt="Screenshots of the dashboard project showing desktop version"
             />
           </div>
-          {/*<div className="bg-[#FF4D6A1A] px-[10px] py-[10px]">
-              <Image
-                src={Discord}
-                width={25}
-                height={23}
-                className="hidden md:block"
-                alt="Screenshots of the dashboard project showing desktop version"
-              />
-            </div> */}
           <ConnectWalletModal
             isOpen={isOpen}
             setIsOpen={setIsOpen}
@@ -71,12 +77,57 @@ const NavBar = ({
 
           {address !== "" && (
             <div className="relative">
+              <Listbox
+                value={selectedPerson}
+                onChange={(value) => {
+                  setSelectedPerson(value);
+                  showToast(
+                    `Please open wallet and switch network to Solana ${value.name}`,
+                    "success"
+                  );
+                }}
+              >
+                <Listbox.Button>
+                  <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] flex flex-col cursor-pointer border border-transparent hover:border-[#cf5c5c] hover:border">
+                    <div className="flex flex-row gap-3">
+                      <span className="text-[#86303E]">
+                        {selectedPerson.name}
+                      </span>
+                      <Image
+                        src={CaratDown}
+                        width={12}
+                        height={8}
+                        className="block h-[8px] my-auto"
+                        alt="Screenshots of the dashboard project showing desktop version"
+                      />
+                    </div>
+                  </div>
+                </Listbox.Button>
+                <Listbox.Options>
+                  {networks.map((network, index) => (
+                    <Listbox.Option key={network.id} value={network}>
+                      <div
+                        style={{ top: `calc(100% * ${index + 1})` }}
+                        className="bg-[#FF4D6A1A] px-[10px] py-[10px] flex absolute mt-1 w-full flex-col cursor-pointer border border-transparent hover:border-[#cf5c5c] hover:border"
+                      >
+                        <div className="flex flex-row gap-3">
+                          <span className="text-[#86303E]">{network.name}</span>
+                        </div>
+                      </div>
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Listbox>
+            </div>
+          )}
+          {address !== "" && (
+            <div className="relative">
               <Menu>
                 <Menu.Button>
                   <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] flex flex-col cursor-pointer border border-transparent hover:border-[#cf5c5c] hover:border">
                     <div className="flex flex-row gap-3">
                       <span className="text-[#86303E]">
-                        {truncateWalletAddress(address, 11, 11)}
+                        {truncateWalletAddress(address, 6, 6)}
                       </span>
                       <Image
                         src={CaratDown}
@@ -100,8 +151,6 @@ const NavBar = ({
                         >
                           <Image
                             src={DisconnectWallet}
-                            width={12}
-                            height={8}
                             className="block w-full my-auto"
                             alt="Screenshots of the dashboard project showing desktop version"
                           />

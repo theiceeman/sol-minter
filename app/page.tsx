@@ -1,13 +1,20 @@
 "use client";
-import Image from "next/image";
 import NavBar from "./ui/components/NavBar";
 import MintForm from "./ui/components/MintForm";
 import { useEffect, useState } from "react";
-import { connectToBrowserWalletAgain, loadProvider } from "./utils/web3-solana";
+import {
+  connectToBrowserWalletAgain,
+  iSupportedNetwork,
+  loadProvider,
+} from "./utils/web3-solana";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState<any>(null);
+  const [network, setNetwork] = useState<any>(null);
+
+  // console.log({ xxx:window.solana.isMainnet });
 
   useEffect(() => {
     if (!provider) return;
@@ -34,10 +41,14 @@ export default function Home() {
       }
     }
     fetch();
+    setNetwork(iSupportedNetwork.mainnetBeta);
   }, []);
 
   return (
     <div className="relative z-0">
+      <div>
+        <Toaster position="top-right" />
+      </div>
       <div className="flex relative h-screen flex-col items-center px-24  pt-10 z-[1]">
         <NavBar setAddress={setAddress} address={address} provider={provider} />
 
@@ -45,14 +56,14 @@ export default function Home() {
           <p className="p-0 m-0 leading-[6rem] tracking-tighter text-[100px] font-bold text-white">
             Mint Fungible
             <br />
-            Tokens on <span className="text-[#7cffa0]">Solana</span>.
+            Tokens on <span className="text-[#7cffa0]">Solana</span>
           </p>
           <p className="text-[#ACACAC] pt-5 text-lg font-medium">
             Deploy spl tokens on the solana network, with your metadata stored
             onchain; <br /> all enabled by the Token-2022 program.
           </p>
         </div>
-        <MintForm />
+        <MintForm provider={provider} address={address} network={network} />
       </div>
 
       <div className="absolute top-0 w-full h-full bg-[url('/noise.svg')] opacity-[0.12]  z-0"></div>

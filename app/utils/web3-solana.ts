@@ -1,9 +1,9 @@
 import { Connection, PublicKey, SystemProgram, Transaction, clusterApiUrl } from "@solana/web3.js";
 import { buildCreateTokenTransaction, generateKeyPair } from "./deploy-token-transaction";
 import { PhantomProvider } from "./types";
+import validateDeployTokenInput from "./validations";
+import { showToast } from "./toaster";
 
-const CLUSTER_URL = process.env.RPC_URL ?? clusterApiUrl("devnet");
-const connection = new Connection(CLUSTER_URL, { commitment: "finalized" });
 
 declare global {
     interface Window {
@@ -13,8 +13,32 @@ declare global {
         phantom: any;
     }
 }
+export interface iToken {
+    name: string,
+    symbol: string,
+    logoUrl: string,
+    supply: string
+}
+export enum iSupportedNetwork {
+    mainnetBeta = 'mainnet-beta',
+    devnet = 'devnet'
+}
 
-export  function loadProvider() {
+
+export function loadConnection(network: iSupportedNetwork) {
+    let CLUSTER_URL;
+    if (network === iSupportedNetwork.mainnetBeta) {
+        CLUSTER_URL = process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_RPC
+    } else {
+        CLUSTER_URL = clusterApiUrl(network)
+    }
+    console.log({ CLUSTER_URL })
+    if (!CLUSTER_URL) return;
+
+    return new Connection(CLUSTER_URL, { commitment: "finalized" });
+}
+
+export function loadProvider() {
     const { solana } = window;
     console.log({ window })
 
@@ -94,7 +118,11 @@ export default function truncateWalletAddress(address: string, startLength = 2, 
  * @param   {Connection}  connection an RPC connection
  * @returns {Promise<Transaction>}            a transaction
  */
-const createTransferTransaction = async (publicKey: PublicKey | string) => {
+const createTransferTransaction = async (publicKey: PublicKey | string, network: iSupportedNetwork) => {
+    let connection = loadConnection(network);
+    if (!connection)
+        throw new Error('Please connect wallet.')
+
     const transaction = new Transaction().add(
         SystemProgram.transfer({
             fromPubkey: new PublicKey(publicKey),
@@ -109,9 +137,9 @@ const createTransferTransaction = async (publicKey: PublicKey | string) => {
 };
 
 
-export async function transferTransaction(provider: any, publicKey: PublicKey | string) {
+export async function transferTransaction(provider: any, publicKey: PublicKey | string, network: iSupportedNetwork) {
     try {
-        const transaction = await createTransferTransaction(publicKey);
+        const transaction = await createTransferTransaction(publicKey, network);
         // console.log({transaction});return;
         const signature = await provider.signAndSendTransaction(transaction);
         // console.log({ signature })
@@ -123,27 +151,39 @@ export async function transferTransaction(provider: any, publicKey: PublicKey | 
 
 
 
-export async function deployTokenTransaction(provider: any, publicKey: string) {
-    let mintKeypair = generateKeyPair()
-
-    const tokenConfig = {
-        mint: mintKeypair.publicKey,
-        updateAuthority: new PublicKey(publicKey),
-        name: "AVALANCHE",
-        symbol: "AVAX",
-        image: "https://www.paradigm.xyz/static/madrealities.png",
-        uri: "https://raw.githubusercontent.com/theiceeman/solana-crash-course/main/token.json",
-        additionalMetadata: [
-            ["description", "This is a short description..."]
-        ] as [string, string][],
-    };
-
+export async function deployTokenTransaction(
+    provider: any,
+    network: iSupportedNetwork,
+    publicKey: string,
+    token: iToken
+) {
     try {
+
+        await validateDeployTokenInput(provider, network, publicKey, token)
+
+        let mintKeypair = generateKeyPair()
+        let connection = loadConnection(network);
+        if (!connection)
+            throw new Error('Please connect wallet.')
+
+        const tokenConfig = {
+            mint: mintKeypair.publicKey,
+            updateAuthority: new PublicKey(publicKey),
+            name: token.name,
+            symbol: token.symbol,
+            image: token.logoUrl,
+            uri: "https://raw.githubusercontent.com/theiceeman/solana-crash-course/main/token.json",
+            additionalMetadata: [
+                ["description", "This is a short description..."]
+            ] as [string, string][],
+        };
+
         const transaction = await buildCreateTokenTransaction(
+            network,
             tokenConfig,
             new PublicKey(publicKey),
             mintKeypair,
-            1000000_000000000
+            Number(token.supply) * 10 ** 9
         );
 
         const serializedTx = transaction.serialize({ requireAllSignatures: false });
@@ -157,7 +197,8 @@ export async function deployTokenTransaction(provider: any, publicKey: string) {
         );
 
         console.log({ confirmTransaction }); return;
-    } catch (error) {
-        console.log({ message: error });
+    } catch (error: any) {
+        showToast(error.message, 'failed')
+        throw new Error(error)
     }
 }

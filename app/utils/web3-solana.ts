@@ -2,6 +2,7 @@ import { Connection, PublicKey, SystemProgram, Transaction, clusterApiUrl } from
 import { buildCreateTokenTransaction, generateKeyPair } from "./deploy-token-transaction";
 import validateDeployTokenInput from "./validations";
 import { showToast } from "./toaster";
+import { deployMetadata } from "./octokit-script";
 
 
 declare global {
@@ -161,6 +162,8 @@ export async function deployTokenTransaction(
 
         await validateDeployTokenInput(provider, network, publicKey, token)
 
+        let tokenUri = await deployMetadata(token,network);
+
         let mintKeypair = generateKeyPair()
         let connection = loadConnection(network);
         if (!connection)
@@ -172,7 +175,7 @@ export async function deployTokenTransaction(
             name: token.name,
             symbol: token.symbol,
             image: token.logoUrl,
-            uri: "https://raw.githubusercontent.com/theiceeman/solana-crash-course/main/token.json",
+            uri: tokenUri,
             additionalMetadata: [
                 ["description", "This is a short description..."]
             ] as [string, string][],

@@ -3,17 +3,23 @@ import {
   iSupportedNetwork,
 } from "@/app/utils/web3-solana";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { Bars } from "react-loading-icons";
 
 // MintForm.tsx
 const MintForm = ({
   provider,
   address,
   network,
+  setMintedTokenAddress,
 }: {
   provider: any;
   address: string;
   network: iSupportedNetwork;
+  setMintedTokenAddress: any;
 }) => {
+  const [isMinting, setIsMinting] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -21,10 +27,24 @@ const MintForm = ({
       supply: "",
       logoUrl: "",
     },
-    onSubmit: (values) => {
-    //   console.log({ network, provider, address, values });
-      //   return;
-      deployTokenTransaction(provider, network, address, values);
+    onSubmit: async (values) => {
+      try {
+        setIsMinting(true);
+
+        let tokenAddress = await deployTokenTransaction(
+          provider,
+          network,
+          address,
+          values
+        );
+
+        setIsMinting(false);
+        tokenAddress && setMintedTokenAddress(tokenAddress);
+      } catch (error) {
+
+        setIsMinting(false);
+        // console.log({ error });
+      }
       // formik.resetForm()
     },
   });
@@ -90,11 +110,15 @@ const MintForm = ({
         </div>
         <button
           onClick={() => formik.handleSubmit()}
+          disabled={isMinting}
           type="button"
-          className="border-[#FF4D6A] bottom-1 py-3 bg-[#86303E] mt-5 hover:border-[#ACACAC] hover:border"
+          className="border-[#FF4D6A] bottom-1 py-3 disabled:cursor-not-allowed bg-[#86303E] mt-5 hover:border-[#ACACAC] hover:border"
         >
-          {" "}
-          Proceed with Minting...
+          {isMinting ? (
+            <Bars className="w-4 h-6 mx-auto" />
+          ) : (
+            `Proceed with Minting...`
+          )}
         </button>
       </div>
     </>

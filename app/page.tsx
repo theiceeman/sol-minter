@@ -14,6 +14,25 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState<any>(null);
   const [network, setNetwork] = useState<any>(null);
+  const [mintedTokenAddress, setMintedTokenAddress] = useState<any>(null);
+
+  const tokenExplorerUrl = (network: iSupportedNetwork) => {
+    let url;
+    switch (network) {
+      case iSupportedNetwork.mainnetBeta:
+        url = `https://solscan.io/token/${mintedTokenAddress}`;
+        break;
+      case iSupportedNetwork.devnet:
+        url = `https://solscan.io/account/${mintedTokenAddress}?address=${mintedTokenAddress}&cluster=devnet`;
+        break;
+      default:
+        url = "";
+        break;
+    }
+    // console.log({url})
+
+    return url;
+  };
 
   useEffect(() => {
     if (!provider) return;
@@ -56,6 +75,19 @@ export default function Home() {
             provider={provider}
           />
 
+          {mintedTokenAddress !== null && (
+            <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] flex flex-col w-full mt-5 border border-transparent hover:border-[#cf5c5c] hover:border">
+              <div className="flex flex-row gap-3 justify-center w-full">
+                <span className="text-[#86303E] w-full text-center">
+                  Minting successfull.&nbsp;
+                  <a className="underline" href={tokenExplorerUrl(network)}>
+                    Preview here
+                  </a>
+                </span>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col mx-2  mt-0 pt-12 text-center ">
             <p className="p-0 m-0 leading-[3rem] md:leading-[3.5rem] lg:leading-[6rem] tracking-tighter text-[40px] md:text-[60px] lg:text-[100px] font-bold text-white">
               Mint Fungible
@@ -67,7 +99,12 @@ export default function Home() {
               onchain; <br /> all enabled by the Token-2022 program.
             </p>
           </div>
-          <MintForm provider={provider} address={address} network={network} />
+          <MintForm
+            provider={provider}
+            address={address}
+            network={network}
+            setMintedTokenAddress={setMintedTokenAddress}
+          />
         </div>
 
         <div className="absolute top-0 w-full h-full bg-[url('/noise.svg')] opacity-[0.12]  z-0"></div>

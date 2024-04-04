@@ -162,7 +162,7 @@ export async function deployTokenTransaction(
 
         await validateDeployTokenInput(provider, network, publicKey, token)
 
-        let tokenUri = await deployMetadata(token,network);
+        let tokenUri = await deployMetadata(token, network);
 
         let mintKeypair = generateKeyPair()
         let connection = loadConnection(network);
@@ -198,8 +198,14 @@ export async function deployTokenTransaction(
         const confirmTransaction = await connection.sendRawTransaction(
             signedTx.serialize()
         );
+        if (confirmTransaction) {
+            showToast(`Minting completed successfully.`, 'success')
+            return mintKeypair.publicKey
+        } else {
+            throw new Error('Error minting token!')
+        }
 
-        console.log({ confirmTransaction }); return;
+        // console.log({ confirmTransaction }); return;
     } catch (error: any) {
         showToast(error.message, 'failed')
         throw new Error(error)

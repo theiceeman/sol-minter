@@ -40,7 +40,7 @@ export default function Home() {
       }
     }
     fetch();
-    setNetwork(iSupportedNetwork.mainnetBeta);
+    setNetwork(iSupportedNetwork.devnet);
   }, []);
 
   return (
@@ -49,7 +49,7 @@ export default function Home() {
       <Analytics />
       <div className="relative z-0 w-full">
         <div></div>
-        <div className="flex relative h-screen w-full flex-col items-center md:px-24  pt-10 z-[1]">
+        <div className="flex relative h-screen w-full flex-col items-center md:px-8  pt-10 z-[1]">
           <NavBar
             setAddress={setAddress}
             address={address}

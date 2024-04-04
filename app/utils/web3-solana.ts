@@ -31,7 +31,6 @@ export function loadConnection(network: iSupportedNetwork) {
     } else {
         CLUSTER_URL = clusterApiUrl(network)
     }
-    console.log({ CLUSTER_URL })
     if (!CLUSTER_URL) return;
 
     return new Connection(CLUSTER_URL, { commitment: "finalized" });
@@ -40,7 +39,7 @@ export function loadConnection(network: iSupportedNetwork) {
 export function loadProvider() {
     try {
         const { solana } = window;
-        console.log({ window })
+        // console.log({ window })
 
         if (!solana) {
             throw new Error('Install Solana Phantom wallet.');

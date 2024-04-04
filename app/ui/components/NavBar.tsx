@@ -14,8 +14,8 @@ import { Listbox, Menu } from "@headlessui/react";
 import { showToast } from "@/app/utils/toaster";
 
 const networks = [
-  { id: 1, name: "Mainnet", value: iSupportedNetwork.mainnetBeta },
-  { id: 2, name: "Devnet", value: iSupportedNetwork.devnet },
+  { id: 1, name: "Devnet", value: iSupportedNetwork.devnet },
+  { id: 2, name: "Mainnet", value: iSupportedNetwork.mainnetBeta },
 ];
 
 const NavBar = ({
@@ -41,7 +41,7 @@ const NavBar = ({
   return (
     <>
       <div className="flex  flex-col-reverse md:flex-row justify-between lg:px-10 w-full gap-5 ">
-        <div className="flex flex-row w-full justify-center my-auto mx-auto md:mx-0 gap-3">
+        <div className="flex flex-row w-full justify-center md:justify-start my-auto mx-auto md:mx-0 gap-3">
           <div className="flex">
             <Image
               src={SolanaLogo}
@@ -59,15 +59,21 @@ const NavBar = ({
           </div>
         </div>
         <div className="flex gap-3 w-full justify-center md:justify-end">
-          <div className="bg-[#FF4D6A1A] px-[10px] py-[10px]">
-            <Image
-              src={Telegram}
-              width={25}
-              height={23}
-              className="block"
-              alt="telegram icon"
-            />
-          </div>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://t.me/+WpcxzU28svNkOWFk"
+          >
+            <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] cursor-pointer hover:border-[#cf5c5c] hover:border">
+              <Image
+                src={Telegram}
+                width={25}
+                height={23}
+                className="block"
+                alt="telegram icon"
+              />
+            </div>
+          </a>
           <ConnectWalletModal
             isOpen={isOpen}
             setIsOpen={setIsOpen}

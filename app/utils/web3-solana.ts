@@ -159,7 +159,7 @@ export async function deployTokenTransaction(
     token: iToken
 ) {
     try {
-        console.log({network})
+        console.log({ network })
 
         await validateDeployTokenInput(provider, network, publicKey, token)
 
@@ -199,14 +199,21 @@ export async function deployTokenTransaction(
         const confirmTransaction = await connection.sendRawTransaction(
             signedTx.serialize()
         );
-        if (confirmTransaction) {
+
+        const latestBlockHash = await connection.getLatestBlockhash();
+        const confirmedTransaction = await connection.confirmTransaction({
+            blockhash: latestBlockHash.blockhash,
+            lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+            signature: confirmTransaction,
+        });
+
+        if (confirmTransaction && confirmedTransaction.value.err === null) {
             showToast(`Minting completed successfully.`, 'success')
             return mintKeypair.publicKey
         } else {
             throw new Error('Error minting token!')
         }
 
-        // console.log({ confirmTransaction }); return;
     } catch (error: any) {
         showToast(error.message, 'failed')
         throw new Error(error)

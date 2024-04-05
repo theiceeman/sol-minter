@@ -159,6 +159,7 @@ export async function deployTokenTransaction(
     token: iToken
 ) {
     try {
+        console.log({network})
 
         await validateDeployTokenInput(provider, network, publicKey, token)
 

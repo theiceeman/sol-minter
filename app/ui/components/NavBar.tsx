@@ -22,13 +22,15 @@ const NavBar = ({
   setAddress,
   address,
   provider,
+  setNetwork,
 }: {
   setAddress: any;
   address: string;
   provider: any;
+  setNetwork: any;
 }) => {
   let [isOpen, setIsOpen] = useState(false);
-  const [selectedPerson, setSelectedPerson] = useState(networks[0]);
+  const [selectedNetwork, setSelectedNetwork] = useState(networks[0]);
 
   function closeModal() {
     setIsOpen(false);
@@ -84,9 +86,10 @@ const NavBar = ({
           {address !== "" && (
             <div className="relative hidden md:block">
               <Listbox
-                value={selectedPerson}
+                value={selectedNetwork}
                 onChange={(value) => {
-                  setSelectedPerson(value);
+                  setSelectedNetwork(value);
+                  setNetwork(value.value);
                   showToast(
                     `Please open wallet and switch network to Solana ${value.name}`,
                     "success"
@@ -97,7 +100,7 @@ const NavBar = ({
                   <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] flex flex-col cursor-pointer border border-transparent hover:border-[#cf5c5c] hover:border">
                     <div className="flex flex-row gap-3">
                       <span className="text-[#86303E]">
-                        {selectedPerson.name}
+                        {selectedNetwork.name}
                       </span>
                       <Image
                         src={CaratDown}

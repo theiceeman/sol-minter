@@ -73,6 +73,7 @@ export default function Home() {
             setAddress={setAddress}
             address={address}
             provider={provider}
+            setNetwork={setNetwork}
           />
 
           {mintedTokenAddress !== null && (

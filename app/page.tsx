@@ -81,7 +81,12 @@ export default function Home() {
               <div className="flex flex-row gap-3 justify-center w-full">
                 <span className="text-[#86303E] w-full text-center">
                   Minting successfull.&nbsp;
-                  <a className="underline" href={tokenExplorerUrl(network)}>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                    href={tokenExplorerUrl(network)}
+                  >
                     Preview here
                   </a>
                 </span>

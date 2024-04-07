@@ -25,7 +25,7 @@ export async function deployMetadata(token: iToken, network: iSupportedNetwork) 
         const PATH = `${prefix}/${token.symbol}-${Date.now()}.json`
 
         const response = await octokit.request('GET /user')
-        console.log(`Authenticated as: ${response.data.login}`)
+        // console.log(`Authenticated as: ${response.data.login}`)
 
         let result = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
             owner: OWNER,

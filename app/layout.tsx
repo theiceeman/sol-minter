@@ -23,7 +23,7 @@ export default function RootLayout({
       />
       <meta
         name="keywords"
-        content="spl tokens, deploy token, solana, fungible, minting, metadata, sol-minter"
+        content="spl tokens, deploy token, solana, fungible, minting, metadata, sol-minter, mint tokens, launch crypto, launch token, create new token"
       />
       <meta name="google-site-verification" content="cOJTS8RdT1ZVM5rasm16Y9CQL2UZCsSFMMyGTDPkGy4" />
       <link

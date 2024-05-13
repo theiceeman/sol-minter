@@ -64,7 +64,7 @@ const NavBar = ({
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://t.me/+WpcxzU28svNkOWFk"
+            href="https://t.me/kelviniot"
           >
             <div className="bg-[#FF4D6A1A] px-[10px] py-[10px] cursor-pointer hover:border-[#cf5c5c] hover:border">
               <Image

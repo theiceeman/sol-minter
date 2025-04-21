@@ -1,4 +1,4 @@
-import { createInitializeMintInstruction, createMintToCheckedInstruction, createInitializeInstruction, TOKEN_2022_PROGRAM_ID, createInitializeMetadataPointerInstruction, ExtensionType, getMintLen, TYPE_SIZE, LENGTH_SIZE } from "@solana/spl-token";
+import { createInitializeMintInstruction, createMintToCheckedInstruction, createInitializeInstruction, TOKEN_2022_PROGRAM_ID, createInitializeMetadataPointerInstruction, ExtensionType, getMintLen, TYPE_SIZE, LENGTH_SIZE, createSetAuthorityInstruction, AuthorityType } from "@solana/spl-token";
 import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { TokenMetadata, pack } from "@solana/spl-token-metadata";
 import { PublicKey, Keypair } from "@solana/web3.js";
@@ -105,5 +105,66 @@ export async function buildCreateTokenTransaction(
     );
     transaction.feePayer = new PublicKey(payerPublicKey);
     transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    return transaction;
+}
+
+export async function revokeTokenAuthorities(
+    network: iSupportedNetwork,
+    mintPublicKey: PublicKey,
+    currentAuthority: PublicKey
+) {
+    const connection = loadConnection(network);
+    if (!connection)
+        throw new Error('Please connect wallet.')
+
+    const transaction = new web3.Transaction();
+
+    // Revoke mint authority by setting it to null
+    const revokeMintAuthorityIx = createSetAuthorityInstruction(
+        mintPublicKey,
+        currentAuthority,
+        AuthorityType.MintTokens, // 0
+        null,
+        [],
+        TOKEN_2022_PROGRAM_ID
+    );
+    transaction.add(revokeMintAuthorityIx);
+
+    // Revoke freeze authority by setting it to null
+    const revokeFreezeAuthorityIx = createSetAuthorityInstruction(
+        mintPublicKey,
+        currentAuthority,
+        AuthorityType.FreezeAccount, // 1
+        null,
+        [],
+        TOKEN_2022_PROGRAM_ID
+    );
+    transaction.add(revokeFreezeAuthorityIx);
+
+    // Revoke metadata pointer authority
+    const revokeMetadataPointerAuthorityIx = createSetAuthorityInstruction(
+        mintPublicKey,
+        currentAuthority,
+        AuthorityType.MetadataPointer, // 12
+        null,
+        [],
+        TOKEN_2022_PROGRAM_ID
+    );
+    transaction.add(revokeMetadataPointerAuthorityIx);
+
+    // Revoke close mint authority
+    const revokeCloseMintAuthorityIx = createSetAuthorityInstruction(
+        mintPublicKey,
+        currentAuthority,
+        AuthorityType.CloseMint, // 6
+        null,
+        [],
+        TOKEN_2022_PROGRAM_ID
+    );
+    transaction.add(revokeCloseMintAuthorityIx);
+
+    transaction.feePayer = currentAuthority;
+    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
     return transaction;
 }
